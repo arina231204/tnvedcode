@@ -1,0 +1,23 @@
+<!-- customs_management/templates/tnvedcode/permission_search.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Permission Search</title>
+</head>
+<body>
+    <h1>Разрешения для кода {{ permissions.0.code }}</h1>
+
+    <ul>
+        {% for permission in permissions %}
+            <li>
+                Организация: {{ permission.organization.name }}<br>
+                Статус ввоза для юридических лиц: {{ permission.get_import_status_legal_display }}<br>
+                Статус ввоза для физических лиц: {{ permission.get_import_status_individual_display }}
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
