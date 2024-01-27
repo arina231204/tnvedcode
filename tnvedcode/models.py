@@ -1,11 +1,23 @@
-
 from django.db import models
+IMPORT_STATUS_CHOICES = [
+        ('+', '+'),
+        ('-', '-'),
+        ('x', 'x'),
+    ]
+
 
 class TnvedCode(models.Model):
     code = models.IntegerField(unique=True, verbose_name='Код товара')
+    name = models.CharField(max_length=255, verbose_name='Наименование группы товара')
+    import_status_individual_private = models.CharField(max_length=1, choices=IMPORT_STATUS_CHOICES, default='-',
+                                                        verbose_name='Статус ввоза для физических лиц частных компаний')
+    import_status_legal_private = models.CharField(max_length=1, choices=IMPORT_STATUS_CHOICES, default='-',
+                                                   verbose_name='Статус ввоза для юридических лиц частных компаний')
+
 
     def __str__(self):
-        return str(self.code)
+        return f'{self.code}'
+
 
 class Organization(models.Model):
     name = models.CharField(max_length=100, unique=True, verbose_name='Название организации')
@@ -15,11 +27,6 @@ class Organization(models.Model):
 
 
 class Permission(models.Model):
-    IMPORT_STATUS_CHOICES = [
-        ('+', 'Разрешен'),
-        ('-', 'Без лицензии'),
-        ('x', 'Запрещен'),
-    ]
 
 
 
@@ -29,3 +36,6 @@ class Permission(models.Model):
     import_status_individual = models.CharField(max_length=1, choices=IMPORT_STATUS_CHOICES, default='-', verbose_name='Статус ввоза для физических лиц')
 
 
+    class Meta:
+
+        unique_together = ['code', 'organization']

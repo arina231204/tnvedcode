@@ -1,23 +1,251 @@
-<!-- customs_management/templates/tnvedcode/permission_search.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Permission Search</title>
-</head>
-<body>
-    <h1>Разрешения для кода {{ permissions.0.code }}</h1>
+     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
 
-    <ul>
-        {% for permission in permissions %}
-            <li>
-                Организация: {{ permission.organization.name }}<br>
-                Статус ввоза для юридических лиц: {{ permission.get_import_status_legal_display }}<br>
-                Статус ввоза для физических лиц: {{ permission.get_import_status_individual_display }}
-            </li>
-        {% endfor %}
-    </ul>
+    <title>Permission Search</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e6e7eb;
+            color: #1e272e;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        font-family: 'Inter', sans-serif;
+        }
+
+        .gray-header {
+            background: #f4f6f9;
+            border-bottom: 1px solid #d2dae2;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .gray-header h2 {
+            font-size: 1.5rem;
+            margin: 0;
+            color: #344050;
+        }
+
+        .gray-header button {
+            margin-left: 10px;
+        }
+
+        .container {
+            max-width: 2200px;
+            margin: auto;
+        }
+
+        .search-container {
+            display: flex;
+            align-items: center;
+            background-color: #f4f6f9;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+
+        }
+
+        .search-input {
+            border: none;
+            outline: none;
+            flex-grow: 1;
+            padding: 8px;
+            border-radius: 5px;
+        }
+
+        .search-button {
+            background-color: #6c757d;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+
+        .table-custom {
+            width: 100%;
+            background-color: #fff;
+            border: 1px solid #d2dae2;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-custom thead th {
+            border-bottom: 2px solid #d2dae2;
+            font-weight: 600;
+            color: #5e6f7a;
+            background-color: #f4f6f9;
+        }
+
+        .table-custom th, .table-custom td {
+            padding: 1rem;
+            vertical-align: top;
+            border-top: 1px solid #d2dae2;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #ebf5fb;
+        }
+
+        .table-custom tbody td {
+            position: relative;
+        }
+
+        .table-custom tbody td::before {
+            content: "";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 10px;
+            background-color: #3498db;
+            opacity: 0.8;
+            z-index: -1;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header Section -->
+    <div class="gray-header">
+        <h2>ТНВЭД ЕАЭС</h2>
+        <div>
+            <a href="{% url 'create_organization' %}" class="btn btn-outline-primary">Создать организацию</a>
+            <a href="{% url 'create_tnved_code' %}" class="btn btn-outline-primary">Создать код</a>
+            <a href="{% url 'create_permission' %}" class="btn btn-outline-primary">Создать разрешения</a>
+            <button class="btn btn-outline-warning">Редактировать организацию</button>
+            <button class="btn btn-outline-warning">Редактировать код</button>
+            <button class="btn btn-outline-warning">Редактировать разрешение</button>
+            <button class="btn btn-outline-danger">Удалить организацию</button>
+            <button class="btn btn-outline-danger">Удалить код</button>
+            <button class="btn btn-outline-danger">Удалить разрешение</button>
+
+        </div>
+    </div>
+
+<div class="container mt-10">
+    <div class="search-container">
+        <input type="text" class="form-control search-input" id="codeInput" placeholder="Введите код">
+
+        <button class="btn search-button" onclick="searchPermissions()">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-arrow-right" width="24"
+                height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                <path d="M5 12l14 0" />
+                <path d="M13 18l6 -6" />
+                <path d="M13 6l6 6" />
+            </svg>
+        </button>
+    </div>
+    </div>
+
+    <div class="container mt-6">
+
+        <div class="row">
+            <!-- First Table -->
+            <div class="col-md-6">
+                <div class="table-responsive">
+                   <table class="table-custom table table-hover" id="permissionsTable">
+                <thead>
+                    <tr>
+                        <th rowspan="2">Наименование раздела</th>
+                        <th colspan="{{ permissions.count }}">{{ permissions.0.code }}:{{ permissions.0.code.name }}</th>
+
+                    </tr>
+                </thead>
+                     <tr>
+                         <td>Организация Лицензиар/Эксперт</td>
+                        {% for permission in permissions %}
+                            <th>{{ permission.organization.name }}</th>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Документы для юр. лиц</td>
+                        {% for permission in permissions %}
+                            <td>{{ permission.get_import_status_legal_display }}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Документы для физ. лиц</td>
+                        {% for permission in permissions %}
+                            <td>{{ permission.get_import_status_individual_display }}</td>
+                        {% endfor %}
+                    </tr>
+            </table>
+                </div>
+            </div>
+
+            <!-- Second Table -->
+            <div class="col-md-6">
+                <div class="table-responsive">
+                    <table class="table-custom table table-hover" id="secondPermissionsTable">
+                        <thead>
+                            <tr>
+                                <th>Сертификат соответствия/Декларация соответствия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Частные компании</td>
+                            </tr>
+                            <tr>
+                                <td>{{ permissions.0.code.import_status_legal_private }}</td>
+                            </tr>
+                            <tr>
+                                <td>{{ permissions.0.code.import_status_individual_private }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function searchPermissions() {
+            var codeInput = $('#codeInput');
+            var scrollPosition = codeInput.scrollTop(); // Запоминаем положение скролла
+            var code = codeInput.val();
+            $.ajax({
+                url: '/search/' + code + '/',
+                method: 'GET',
+                success: function(data) {
+                    var tableHtml = $(data).find('#permissionsTable').html();
+                    var secondTableHtml = $(data).find('#secondPermissionsTable').html();
+
+                    if (tableHtml.trim() !== "") {
+                        $('#permissionsTable').html(tableHtml);
+                    } else {
+                        $('#permissionsTable').remove();
+                    }
+
+                    if (secondTableHtml.trim() !== "") {
+                        $('#secondPermissionsTable').html(secondTableHtml);
+                    } else {
+                        $('#secondPermissionsTable').remove();
+                    }
+                },
+                error: function(error) {
+                    console.error(error);
+                }
+            });
+        }
+    </script>
 </body>
 </html>

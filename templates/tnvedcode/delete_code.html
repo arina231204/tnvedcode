@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete Tnved Code</title>
+</head>
+<body>
+    <h2>Delete Tnved Code</h2>
+    <p>Вы уверены, что хотите удалить код товара с кодом {{ tnved_code.code }} и наименованием "{{ tnved_code.name }}"?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Удалить</button>
+    </form>
+
+    <a href="{% url 'success' %}">Отмена</a>
+</body>
+</html>
