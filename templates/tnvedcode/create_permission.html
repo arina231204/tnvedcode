@@ -65,19 +65,17 @@
       <label for="{{ form.code.id_for_label }}">Код </label>
       {{ form.code }}
 
-      <label for="{{ form.name.id_for_label }}">Наименование раздела</label>
-      {{ form.name }}
+      <label for="{{ form.organization.id_for_label }}">Организация</label>
+      {{ form.organization }}
 
-      <label for="{{ form.import_status_legal_private.id_for_label }}">Документы для юр. лиц</label>
-      {{ form.import_status_legal_private }}
+      <label for="{{ form.import_status_legal.id_for_label }}">Статус ввоза для юридических лиц</label>
+      {{ form.import_status_legal }}
 
-      <label for="{{ form.import_status_individual_private.id_for_label }}">Документы для физ. лиц</label>
-      {{ form.import_status_individual_private }}
+      <label for="{{ form.import_status_individual.id_for_label }}">Статус ввоза для физических лиц</label>
+      {{ form.import_status_individual }}
 
       <button type="submit">Сохранить</button>
     </form>
-
-
   </div>
 
 </body>

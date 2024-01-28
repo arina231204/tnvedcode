@@ -59,25 +59,26 @@
 </head>
 <body>
 
-  <div class="card">
-    <form method="post">
-      {% csrf_token %}
-      <label for="{{ form.code.id_for_label }}">Код </label>
-      {{ form.code }}
-
-      <label for="{{ form.name.id_for_label }}">Наименование раздела</label>
-      {{ form.name }}
-
-      <label for="{{ form.import_status_legal_private.id_for_label }}">Документы для юр. лиц</label>
-      {{ form.import_status_legal_private }}
-
-      <label for="{{ form.import_status_individual_private.id_for_label }}">Документы для физ. лиц</label>
-      {{ form.import_status_individual_private }}
-
-      <button type="submit">Сохранить</button>
-    </form>
+  <div class="page">
+    <div class="content">
+      <div class="container-xl">
+        <div class="card-container">
+          <div class="card">
+            <form method="post">
+              {% csrf_token %}
 
 
+              <div class="mb-3">
+                <label class="form-label" for="{{ form.name.id_for_label }}">Организация Лицензиар/Эксперт</label>
+                {{ form.name }}
+              </div>
+
+              <button type="submit" class="btn btn-success">Сохранить</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 </body>

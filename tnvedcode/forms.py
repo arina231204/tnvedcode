@@ -11,10 +11,6 @@ class OrganizationsForm(forms.ModelForm):
         model = Organization
         fields = '__all__'
 
-class OrganizationsForm(forms.ModelForm):
-    class Meta:
-        model = Organization
-        fields = '__all__'
 
 
 class PermissionForm(forms.ModelForm):

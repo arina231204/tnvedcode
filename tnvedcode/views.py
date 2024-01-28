@@ -50,7 +50,7 @@ def create_organization(request):
             return redirect('success')
     else:
         form = OrganizationsForm()
-    return render(request, 'tnvedcode/create_code.html', {'form': form})
+    return render(request, 'tnvedcode/create_organization.html', {'form': form})
 
 def create_permission(request):
     if request.method == 'POST':
@@ -60,16 +60,17 @@ def create_permission(request):
             return redirect('success')
     else:
         form = PermissionForm()
-    return render(request, 'tnvedcode/create_code.html', {'form': form})
+    return render(request, 'tnvedcode/create_permission.html', {'form': form})
 
 
 def delete_tnved_code(request, code):
     try:
         tnved_code = TnvedCode.objects.get(code=code)
     except TnvedCode.DoesNotExist:
-        return HttpResponse("Такого объекта не существует", status=404)
+        return redirect('notsuccess')
 
     if request.method == 'POST':
+
         tnved_code.delete()
         return redirect('success')
 
@@ -80,11 +81,11 @@ def delete_organization(request, name):
     try:
         organization = Organization.objects.get(name=name)
     except Organization.DoesNotExist:
-        return HttpResponse("Такого объекта не существует", status=404)
+        return redirect('notsuccess')
 
     if request.method == 'POST':
         organization.delete()
-        return redirect('success')  # Замените 'your_redirect_url' на необходимый URL
+        return redirect('success')
 
     return render(request, 'tnvedcode/delete_organization.html', {'organization': organization})
 
@@ -93,7 +94,7 @@ def delete_permission(request, code, organization_name):
     try:
         permission = Permission.objects.get(code__code=code, organization__name=organization_name)
     except Permission.DoesNotExist:
-        return HttpResponse("Такого объекта не существует", status=404)
+        return redirect('notsuccess')
 
     if request.method == 'POST':
         permission.delete()
@@ -101,5 +102,77 @@ def delete_permission(request, code, organization_name):
 
     return render(request, 'tnvedcode/delete_permission.html', {'permission': permission})
 
+
+
+def update_code(request, code):
+    try:
+        tnved_code = TnvedCode.objects.get(code=code)
+    except TnvedCode.DoesNotExist:
+        return redirect('notsuccess')
+
+    if request.method == 'POST':
+        form = TnvedCodeForm(request.POST, instance=tnved_code)
+        if form.is_valid():
+            form.save()
+            return redirect('success')
+    else:
+        form = TnvedCodeForm(instance=tnved_code)
+
+    return render(request, 'tnvedcode/update_code.html', {'form': form, 'code': code})
+
+
+def update_organization(request, name):
+    try:
+        organization = Organization.objects.get(name=name)
+    except Organization.DoesNotExist:
+        return redirect('notsuccess')
+
+    if request.method == 'POST':
+        form = OrganizationsForm(request.POST, instance=organization)
+        if form.is_valid():
+            form.save()
+            return redirect('success')
+    else:
+        form = OrganizationsForm(instance=organization)
+
+    return render(request, 'tnvedcode/update_organizations.html', {'form': form})
+
+def update_permission(request, code, organization_name):
+    try:
+        permission = Permission.objects.get(code__code=code, organization__name=organization_name)
+    except Permission.DoesNotExist:
+        return redirect('notfound')
+
+    if request.method == 'POST':
+        form = PermissionForm(request.POST, instance=permission)
+        if form.is_valid():
+            form.save()
+            return redirect('success')
+    else:
+        form = PermissionForm(instance=permission)
+
+    return render(request, 'tnvedcode/update_permission.html', {'form': form, 'permission': permission})
+
+def all_codes(request):
+    tnved_codes = TnvedCode.objects.all()
+    return render(request, 'tnvedcode/all_codes.html', {'tnved_codes': tnved_codes})
+
+def all_оrganizations(request):
+    organizations = Organization.objects.all()
+    return render(request, 'tnvedcode/all_organizations.html', {'organizations': organizations})
+
+def all_permissions(request):
+    permissions = Permission.objects.all()
+    return render(request, 'tnvedcode/all_permissions.html', {'permissions': permissions})
+
+
+
+
+
+
+
 def success_view(request):
     return render(request, 'tnvedcode/success.html')
+
+def notsuccess_view(request):
+    return render(request, 'tnvedcode/notsuccess.html')

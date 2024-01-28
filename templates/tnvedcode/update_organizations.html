@@ -6,13 +6,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
+
+
         .card {
             background-color: #fff;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             padding: 20px;
             width: 400px;
-            margin: 10px;
+            margin: 10px; /* Добавил небольшой отступ для визуального разделения от краев */
         }
 
         form {
@@ -62,24 +64,25 @@
   <div class="card">
     <form method="post">
       {% csrf_token %}
-      <label for="{{ form.code.id_for_label }}">Код </label>
+      <label for="{{ form.code.id_for_label }}">Код товара:</label>
       {{ form.code }}
 
-      <label for="{{ form.name.id_for_label }}">Наименование раздела</label>
+      <label for="{{ form.name.id_for_label }}">Наименование группы товара:</label>
       {{ form.name }}
 
-      <label for="{{ form.import_status_legal_private.id_for_label }}">Документы для юр. лиц</label>
+      <label for="{{ form.import_status_legal_private.id_for_label }}">Статус ввоза для юридических лиц частных компаний:</label>
       {{ form.import_status_legal_private }}
 
-      <label for="{{ form.import_status_individual_private.id_for_label }}">Документы для физ. лиц</label>
+      <label for="{{ form.import_status_individual_private.id_for_label }}">Статус ввоза для физических лиц частных компаний:</label>
       {{ form.import_status_individual_private }}
 
-      <button type="submit">Сохранить</button>
+      <button type="submit">Update</button>
     </form>
 
-
+    <a href="{% url 'all_codes' %}">Вернуться</a>
   </div>
 
 </body>
 </html>
+
 {% endblock %}

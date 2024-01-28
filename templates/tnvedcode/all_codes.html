@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <div class="container">
+        <div class="mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Введите код для поиска">
+        </div>
+
+        <ul class="list-group" id="tnvedList">
+            {% for code in tnved_codes %}
+
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ code.code }}</h5>
+                        <p class="card-text">{{ code.name }}</p>
+                    </div>
+                    <div class="card-footer d-flex justify-content-between align-items-center">
+                        <div class="btn-group">
+                            <form method="post" action="{% url 'delete_code' code=code.code %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-danger me-2">Удалить</button>
+                            </form>
+                            <form method="post" action="{% url 'update_code' code=code.code %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-warning">Изменить</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const tnvedList = document.getElementById('tnvedList');
+
+    searchInput.addEventListener('input', function() {
+        const searchQuery = searchInput.value.toLowerCase();
+
+        Array.from(tnvedList.children).forEach(function(card) {
+            const codeText = card.querySelector('.card-title').innerText.toLowerCase();
+            const nameText = card.querySelector('.card-text').innerText.toLowerCase();
+
+            // Проверяем совпадение по коду или названию
+            if (codeText.includes(searchQuery) || nameText.includes(searchQuery)) {
+                card.style.display = 'block';
+            } else {
+                card.style.display = 'none';
+            }
+        });
+    });
+});
+
+    </script>
+{% endblock %}

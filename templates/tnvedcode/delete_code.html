@@ -1,19 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete Tnved Code</title>
-</head>
-<body>
-    <h2>Delete Tnved Code</h2>
-    <p>Вы уверены, что хотите удалить код товара с кодом {{ tnved_code.code }} и наименованием "{{ tnved_code.name }}"?</p>
+{% extends 'base.html' %}
 
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Удалить</button>
-    </form>
+{% block content %}
+    <div class="container">
+        <h2>Delete Confirmation</h2>
+        <p>Are you sure you want to delete code {{ tnved_code.code }} - {{ tnved_code.name }}?</p>
 
-    <a href="{% url 'success' %}">Отмена</a>
-</body>
-</html>
+        <form method="post" action="{% url 'delete_code' code=tnved_code.code %}">
+            {% csrf_token %}
+            <button type="submit" name="confirm_delete" class="btn btn-danger">Confirm Delete</button>
+            <a href="{% url 'remaining_codes' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+{% endblock %}

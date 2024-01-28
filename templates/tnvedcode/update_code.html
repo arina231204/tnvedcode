@@ -62,6 +62,7 @@
   <div class="card">
     <form method="post">
       {% csrf_token %}
+
       <label for="{{ form.code.id_for_label }}">Код </label>
       {{ form.code }}
 
@@ -74,12 +75,13 @@
       <label for="{{ form.import_status_individual_private.id_for_label }}">Документы для физ. лиц</label>
       {{ form.import_status_individual_private }}
 
-      <button type="submit">Сохранить</button>
+      <button type="submit">Update</button>
     </form>
 
-
+    <a href="{% url 'all_codes' %}">Вернуться</a>
   </div>
 
 </body>
 </html>
+
 {% endblock %}

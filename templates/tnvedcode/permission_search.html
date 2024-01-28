@@ -1,9 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'base.html' %}
+
+{% block content %}
 <head>
     <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
     <title>Permission Search</title>
     <style>
@@ -19,28 +21,11 @@
         font-family: 'Inter', sans-serif;
         }
 
-        .gray-header {
-            background: #f4f6f9;
-            border-bottom: 1px solid #d2dae2;
-            padding: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .gray-header h2 {
-            font-size: 1.5rem;
-            margin: 0;
-            color: #344050;
-        }
-
-        .gray-header button {
-            margin-left: 10px;
-        }
 
         .container {
-            max-width: 2200px;
+
             margin: auto;
+            max-width: 100%;
         }
 
         .search-container {
@@ -113,27 +98,15 @@
             opacity: 0.8;
             z-index: -1;
         }
+
+
+
     </style>
 </head>
 
 <body>
 
-    <!-- Header Section -->
-    <div class="gray-header">
-        <h2>ТНВЭД ЕАЭС</h2>
-        <div>
-            <a href="{% url 'create_organization' %}" class="btn btn-outline-primary">Создать организацию</a>
-            <a href="{% url 'create_tnved_code' %}" class="btn btn-outline-primary">Создать код</a>
-            <a href="{% url 'create_permission' %}" class="btn btn-outline-primary">Создать разрешения</a>
-            <button class="btn btn-outline-warning">Редактировать организацию</button>
-            <button class="btn btn-outline-warning">Редактировать код</button>
-            <button class="btn btn-outline-warning">Редактировать разрешение</button>
-            <button class="btn btn-outline-danger">Удалить организацию</button>
-            <button class="btn btn-outline-danger">Удалить код</button>
-            <button class="btn btn-outline-danger">Удалить разрешение</button>
 
-        </div>
-    </div>
 
 <div class="container mt-10">
     <div class="search-container">
@@ -150,73 +123,56 @@
             </svg>
         </button>
     </div>
-    </div>
 
-    <div class="container mt-6">
+
+    <div class="container mt-10">
 
         <div class="row">
             <!-- First Table -->
-            <div class="col-md-6">
+            <div class="col-md-">
                 <div class="table-responsive">
                    <table class="table-custom table table-hover" id="permissionsTable">
                 <thead>
                     <tr>
                         <th rowspan="2">Наименование раздела</th>
                         <th colspan="{{ permissions.count }}">{{ permissions.0.code }}:{{ permissions.0.code.name }}</th>
+                        <th colspan="{{ permissions.count }}">Сертификат соответствия/Декларация соответствияа</th>
 
                     </tr>
                 </thead>
-                     <tr>
-                         <td>Организация Лицензиар/Эксперт</td>
+
+                    <tr>
+                        <td class="last-column">Организация Лицензиар/Эксперт</td>
                         {% for permission in permissions %}
                             <th>{{ permission.organization.name }}</th>
                         {% endfor %}
+                        <th class="last-column">Частные компании</th> <!-- Добавлена новая колонка -->
                     </tr>
+
+
                     <tr>
-                        <td>Документы для юр. лиц</td>
+                        <td class="last-column">Документы для юр. лиц</td>
                         {% for permission in permissions %}
                             <td>{{ permission.get_import_status_legal_display }}</td>
                         {% endfor %}
+                        <td>{{ permissions.0.code.import_status_legal_private }}</td> <!-- Добавлена новая ячейка -->
                     </tr>
+
                     <tr>
-                        <td>Документы для физ. лиц</td>
+                        <td class="last-column">Документы для физ. лиц</td>
                         {% for permission in permissions %}
                             <td>{{ permission.get_import_status_individual_display }}</td>
                         {% endfor %}
+                        <td class="last-column">{{ permissions.0.code.import_status_individual_private }}</td> <!-- Добавлена новая ячейка -->
                     </tr>
+
             </table>
                 </div>
             </div>
 
-            <!-- Second Table -->
-            <div class="col-md-6">
-                <div class="table-responsive">
-                    <table class="table-custom table table-hover" id="secondPermissionsTable">
-                        <thead>
-                            <tr>
-                                <th>Сертификат соответствия/Декларация соответствия</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Частные компании</td>
-                            </tr>
-                            <tr>
-                                <td>{{ permissions.0.code.import_status_legal_private }}</td>
-                            </tr>
-                            <tr>
-                                <td>{{ permissions.0.code.import_status_individual_private }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
+            
     <script>
         function searchPermissions() {
             var codeInput = $('#codeInput');
@@ -246,6 +202,9 @@
                 }
             });
         }
+
+
     </script>
 </body>
-</html>
+{% endblock %}
+

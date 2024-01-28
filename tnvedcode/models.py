@@ -7,13 +7,19 @@ IMPORT_STATUS_CHOICES = [
 
 
 class TnvedCode(models.Model):
+    IMPORT_STATUS_CHOICES = [
+        ('+', '+'),
+        ('-', '-'),
+        ('x', 'x'),
+    ]
+
     code = models.IntegerField(unique=True, verbose_name='Код товара')
     name = models.CharField(max_length=255, verbose_name='Наименование группы товара')
-    import_status_individual_private = models.CharField(max_length=1, choices=IMPORT_STATUS_CHOICES, default='-',
-                                                        verbose_name='Статус ввоза для физических лиц частных компаний')
     import_status_legal_private = models.CharField(max_length=1, choices=IMPORT_STATUS_CHOICES, default='-',
                                                    verbose_name='Статус ввоза для юридических лиц частных компаний')
 
+    import_status_individual_private = models.CharField(max_length=1, choices=IMPORT_STATUS_CHOICES, default='-',
+                                                        verbose_name='Статус ввоза для физических лиц частных компаний')
 
     def __str__(self):
         return f'{self.code}'
@@ -39,3 +45,4 @@ class Permission(models.Model):
     class Meta:
 
         unique_together = ['code', 'organization']
+
